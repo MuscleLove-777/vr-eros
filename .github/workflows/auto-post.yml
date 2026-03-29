@@ -28,15 +28,7 @@ jobs:
           AFFILIATE_ID: ${{ secrets.AFFILIATE_ID }}
           SITE_NAME: ${{ secrets.SITE_NAME }}
         working-directory: scripts
-        run: python main.py --keyword "VR" --count 3
-
-      - name: Generate articles (アダルトVR)
-        env:
-          API_ID: ${{ secrets.API_ID }}
-          AFFILIATE_ID: ${{ secrets.AFFILIATE_ID }}
-          SITE_NAME: ${{ secrets.SITE_NAME }}
-        working-directory: scripts
-        run: python main.py --keyword "アダルトVR" --count 2
+        run: python main.py --keyword "VR" --count 1
 
       - name: Commit and push
         run: |
