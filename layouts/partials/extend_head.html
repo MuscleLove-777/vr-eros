@@ -1,0 +1,16 @@
+{{ if .IsPage }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "{{ .Title }}",
+  "description": "{{ .Description }}",
+  "datePublished": "{{ .Date.Format "2006-01-02" }}",
+  "dateModified": "{{ .Lastmod.Format "2006-01-02" }}",
+  "author": {"@type": "Organization", "name": "{{ .Site.Params.author }}"},
+  "publisher": {"@type": "Organization", "name": "{{ .Site.Title }}"},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "{{ .Permalink }}"}
+  {{ with .Params.cover }}{{ if .image }},"image": "{{ .image }}"{{ end }}{{ end }}
+}
+</script>
+{{ end }}

@@ -563,6 +563,8 @@ def _build_related_section() -> str:
 {random.choice(suggestions)}
 
 [カテゴリー一覧を見る](/vr-eros/categories/) | [タグ一覧を見る](/vr-eros/tags/)
+
+[もっと多くのジャンルを見る → エロナビ](https://musclelove-777.github.io/eronavi/)
 """
 
 

@@ -12,9 +12,10 @@ buildExpired = false
 
 [sitemap]
   changefreq = "daily"
-  priority = 0.5
+  priority = 0.7
 
 [params]
+  canonicalURL = true
   env = "production"
   description = "VR対応のアダルト作品を毎日厳選。圧倒的没入感のVRエロス体験をサンプル動画付きで紹介"
   author = "没入エロスVR編集部"
