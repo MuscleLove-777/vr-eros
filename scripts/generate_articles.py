@@ -542,6 +542,10 @@ def _build_sns_section() -> str:
      style="display: inline-block; padding: 10px 24px; background: #43e660; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">
     MuscleLove Links
   </a>
+  <a href="https://musclelove.booth.pm/" rel="nofollow" target="_blank"
+     style="display: inline-block; padding: 10px 24px; background: #fc4d50; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">
+    MuscleLove on BOOTH
+  </a>
 </div>
 """
 
