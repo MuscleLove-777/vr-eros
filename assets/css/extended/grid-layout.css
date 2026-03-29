@@ -139,3 +139,28 @@ main.main .pagination {
     font-size: 14px;
   }
 }
+
+/* === 記事本文を画面幅いっぱいに === */
+:root {
+  --main-width: 1200px;
+}
+
+/* 個別記事ページの本文幅 */
+.post-content {
+  max-width: 100%;
+}
+
+/* 記事ヘッダー（タイトル等）も幅いっぱい */
+.post-header {
+  max-width: 100%;
+}
+
+/* 画像を幅いっぱいに */
+.post-content img {
+  max-width: 100%;
+}
+
+/* サンプル画像グリッドも幅いっぱい */
+.post-content div[style*="grid"] {
+  max-width: 100%;
+}
