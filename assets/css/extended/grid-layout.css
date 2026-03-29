@@ -1,34 +1,141 @@
+/* === 記事一覧: グリッドレイアウト === */
 main.main {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+  padding: 0 16px;
 }
+
 main.main .first-entry,
 main.main .home-info,
 main.main .pagination {
   grid-column: 1 / -1;
 }
-.post-entry { margin-bottom: 0; padding: 0; border: none; overflow: hidden; }
+
+/* カード型 */
+.post-entry {
+  margin-bottom: 0;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
 .main .post-entry .entry-cover img {
   aspect-ratio: 16 / 9;
   object-fit: cover;
   border-radius: 8px 8px 0 0;
+  width: 100%;
 }
+
 .main .post-entry .entry-header,
 .main .post-entry .entry-content,
 .main .post-entry .entry-footer {
   padding: 0 12px;
 }
-.main .post-entry .entry-header { padding-top: 10px; }
-.main .post-entry .entry-header h2 {
-  font-size: 16px; line-height: 1.4;
-  -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden;
+
+.main .post-entry .entry-header {
+  padding-top: 10px;
 }
-.main .post-entry .entry-footer { padding-bottom: 10px; font-size: 12px; }
-.post-entry:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-@media (max-width: 900px) { main.main { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
+
+/* 一覧のタイトルは2行で切る */
+.main .post-entry .entry-header h2 {
+  font-size: 15px;
+  line-height: 1.4;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+}
+
+/* 一覧の説明文も2行で切る */
+.main .post-entry .entry-content {
+  font-size: 13px;
+  line-height: 1.4;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 4px 0;
+}
+
+.main .post-entry .entry-footer {
+  padding-bottom: 10px;
+  font-size: 12px;
+}
+
+/* ホバー */
+.post-entry {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.post-entry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* === 個別記事ページ === */
+.post-content h1,
+.post-header h1 {
+  font-size: 1.5rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.post-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.post-content iframe {
+  max-width: 100%;
+}
+
+/* === タブレット: 2列 === */
+@media (max-width: 900px) {
+  main.main {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .main .post-entry .entry-header h2 {
+    font-size: 14px;
+  }
+}
+
+/* === スマホ: 2列コンパクト === */
 @media (max-width: 600px) {
-  main.main { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .main .post-entry .entry-header h2 { font-size: 13px; }
-  .main .post-entry .entry-content { display: none; }
+  main.main {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 0 8px;
+  }
+
+  .main .post-entry .entry-header h2 {
+    font-size: 12px;
+    -webkit-line-clamp: 2;
+  }
+
+  /* スマホでは説明文非表示 */
+  .main .post-entry .entry-content {
+    display: none;
+  }
+
+  .main .post-entry .entry-footer {
+    font-size: 10px;
+    padding-bottom: 8px;
+  }
+
+  /* 個別記事のタイトル */
+  .post-header h1 {
+    font-size: 1.2rem;
+  }
+
+  /* homeInfo */
+  .home-info .entry-content {
+    display: block !important;
+    font-size: 14px;
+  }
 }

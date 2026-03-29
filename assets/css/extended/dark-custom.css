@@ -1,3 +1,4 @@
+/* === ダークテーマ強化 === */
 :root[data-theme="dark"] {
   --theme: #0d1117;
   --entry: #161b22;
@@ -7,6 +8,31 @@
   --content: #e6e6e6;
   --border: #30363d;
 }
-:root[data-theme="dark"] a { color: #ff6b6b; }
-:root[data-theme="dark"] .post-entry { border: 1px solid #30363d; background: #161b22; border-radius: 8px; }
-:root[data-theme="dark"] .post-entry:hover { border-color: #ff6b6b; }
+
+:root[data-theme="dark"] a {
+  color: #ff6b6b;
+}
+
+:root[data-theme="dark"] .post-entry {
+  border: 1px solid #30363d;
+  background: #161b22;
+  border-radius: 8px;
+}
+
+:root[data-theme="dark"] .post-entry:hover {
+  border-color: #ff6b6b;
+}
+
+/* 個別記事ページの背景 */
+:root[data-theme="dark"] .post-content {
+  color: #e6e6e6;
+}
+
+/* ヘッダー・フッターの境界 */
+:root[data-theme="dark"] .header {
+  border-bottom: 1px solid #30363d;
+}
+
+:root[data-theme="dark"] footer {
+  border-top: 1px solid #30363d;
+}
