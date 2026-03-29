@@ -1,0 +1,46 @@
+name: Auto Post Articles
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 毎日UTC 0:00 = JST 9:00
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Generate articles (VR)
+        env:
+          API_ID: ${{ secrets.API_ID }}
+          AFFILIATE_ID: ${{ secrets.AFFILIATE_ID }}
+          SITE_NAME: ${{ secrets.SITE_NAME }}
+        working-directory: scripts
+        run: python main.py --keyword "VR" --count 3
+
+      - name: Generate articles (アダルトVR)
+        env:
+          API_ID: ${{ secrets.API_ID }}
+          AFFILIATE_ID: ${{ secrets.AFFILIATE_ID }}
+          SITE_NAME: ${{ secrets.SITE_NAME }}
+        working-directory: scripts
+        run: python main.py --keyword "アダルトVR" --count 2
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add content/posts/
+          git diff --staged --quiet || (git commit -m "auto: 記事自動生成 $(date +%Y-%m-%d)" && git push)

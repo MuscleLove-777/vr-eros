@@ -1,0 +1,34 @@
+# Hugo build output
+/public/
+/resources/_gen/
+resources/
+
+# Hugo cache
+hugo_stats.json
+.hugo_build.lock
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Environment files（認証情報を含むため必ず除外）
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.venv/
+venv/

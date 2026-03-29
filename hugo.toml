@@ -1,0 +1,95 @@
+baseURL = "https://musclelove-777.github.io/vr-eros/"
+languageCode = "ja"
+defaultContentLanguage = "ja"
+title = "没入エロスVR | アダルトVR作品おすすめガイド"
+theme = "PaperMod"
+paginate = 10
+
+enableRobotsTXT = true
+buildDrafts = false
+buildFuture = false
+buildExpired = false
+
+[sitemap]
+  changefreq = "daily"
+  priority = 0.5
+
+[params]
+  env = "production"
+  description = "VR対応のアダルト作品を毎日厳選。圧倒的没入感のVRエロス体験をサンプル動画付きで紹介"
+  author = "没入エロスVR編集部"
+  images = ["https://musclelove-777.github.io/vr-eros/favicon.svg"]
+  keywords = ["VR AV おすすめ", "アダルトVR ランキング", "FANZA VR", "VR エロ動画", "VR AV 新作", "VR AV 女優", "高画質VR AV", "8K VR AV"]
+  defaultTheme = "dark"
+  ShowReadingTime = false
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowToc = false
+  TocOpen = false
+  comments = false
+
+  [params.homeInfoParams]
+    Title = "没入エロスVR"
+    Content = "VR対応アダルト作品を毎日厳選してお届け。没入感MAXのVRエロス体験をサンプル動画でチェック！"
+
+  [[params.socialIcons]]
+    name = "x-twitter"
+    url = "https://x.com/MuscleGirlLove7"
+
+  [[params.socialIcons]]
+    name = "linktree"
+    url = "https://linktr.ee/ILoveMyCats"
+
+[params.assets]
+  favicon = "favicon.svg"
+  favicon16x16 = "favicon.svg"
+  favicon32x32 = "favicon.svg"
+  apple_touch_icon = "favicon.svg"
+  safari_pinned_tab = "favicon.svg"
+
+[params.cover]
+  hidden = false
+  hiddenInList = false
+  hiddenInSingle = false
+  linkFullImages = true
+
+[params.fuseOpts]
+  isCaseSensitive = false
+  shouldSort = true
+  location = 0
+  distance = 1000
+  threshold = 0.4
+  minMatchCharLength = 0
+  keys = ["title", "permalink", "summary", "content"]
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    noClasses = false
+
+[[menus.main]]
+  name = "検索"
+  url = "/search/"
+  weight = 10
+
+[[menus.main]]
+  name = "カテゴリ"
+  url = "/categories/"
+  weight = 20
+
+[[menus.main]]
+  name = "タグ"
+  url = "/tags/"
+  weight = 30
+
+[[menus.main]]
+  name = "アーカイブ"
+  url = "/archives/"
+  weight = 40

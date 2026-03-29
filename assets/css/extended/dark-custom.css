@@ -1,0 +1,12 @@
+:root[data-theme="dark"] {
+  --theme: #0d1117;
+  --entry: #161b22;
+  --primary: #f0f0f0;
+  --secondary: #8b949e;
+  --tertiary: #30363d;
+  --content: #e6e6e6;
+  --border: #30363d;
+}
+:root[data-theme="dark"] a { color: #ff6b6b; }
+:root[data-theme="dark"] .post-entry { border: 1px solid #30363d; background: #161b22; border-radius: 8px; }
+:root[data-theme="dark"] .post-entry:hover { border-color: #ff6b6b; }
