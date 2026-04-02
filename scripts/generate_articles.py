@@ -592,6 +592,7 @@ def _build_sister_sites():
         "おっぱいパラダイス": "https://musclelove-777.github.io/oppai-paradise/",
         "二次元嫁実写化計画": "https://musclelove-777.github.io/nijigen-realize/",
         "フェチの殿堂": "https://musclelove-777.github.io/fetish-dendo/",
+        "大人のおもちゃ研究所": "https://musclelove-777.github.io/goods-lab/",
     }
     others = [(k, v) for k, v in sites.items() if v != CURRENT_SITE_URL]
     picks = random.sample(others, min(3, len(others)))

@@ -1,3 +1,16 @@
+{{/* ページネーション2ページ目以降をnoindex */}}
+{{ if and (.IsNode) (.Paginator) (gt .Paginator.PageNumber 1) }}
+<meta name="robots" content="noindex, follow" />
+{{ end }}
+
+{{/* タグページをnoindex。カテゴリページは除外 */}}
+{{ if and (eq .Kind "term") (eq .Data.Singular "tag") }}
+<meta name="robots" content="noindex, follow" />
+{{ end }}
+{{ if eq .Kind "taxonomy" }}
+<meta name="robots" content="noindex, follow" />
+{{ end }}
+
 {{ if .IsPage }}
 <script type="application/ld+json">
 {

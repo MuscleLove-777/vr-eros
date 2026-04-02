@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /tags/
+Disallow: /page/
 
-Sitemap: {{ .Site.BaseURL }}sitemap.xml
+Sitemap: https://musclelove-777.github.io/vr-eros/sitemap.xml
