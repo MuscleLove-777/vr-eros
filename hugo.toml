@@ -10,6 +10,10 @@ buildDrafts = false
 buildFuture = false
 buildExpired = false
 
+[services]
+  [services.googleAnalytics]
+    ID = ""
+
 [sitemap]
   changefreq = "daily"
   priority = 0.7
