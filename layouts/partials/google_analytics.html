@@ -9,7 +9,11 @@
 
   // FANZAアフィリリンククリック計測
   document.addEventListener('click', function(e) {
-    var link = e.target.closest && e.target.closest('a');
+    var target = e.target;
+    // テキストノードなら親要素へ
+    if (target && target.nodeType === 3) target = target.parentElement;
+    if (!target || !target.closest) return;
+    var link = target.closest('a');
     if (!link || !link.href) return;
     var href = link.href;
     var isAffiliate = href.indexOf('al.fanza.co.jp') !== -1 ||
