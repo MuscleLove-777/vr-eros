@@ -6,5 +6,24 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', '{{ $gaID }}');
+
+  // FANZAアフィリリンククリック計測
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest && e.target.closest('a');
+    if (!link || !link.href) return;
+    var href = link.href;
+    var isAffiliate = href.indexOf('al.fanza.co.jp') !== -1 ||
+                      href.indexOf('al.dmm.co.jp') !== -1;
+    if (!isAffiliate) return;
+    try {
+      gtag('event', 'affiliate_click', {
+        'event_category': 'affiliate',
+        'event_label': (link.textContent || '').trim().slice(0, 100),
+        'link_url': href,
+        'link_domain': 'fanza',
+        'page_path': location.pathname
+      });
+    } catch(err) {}
+  }, true);
 </script>
 {{- end -}}
