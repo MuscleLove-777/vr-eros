@@ -2,7 +2,7 @@ name: Auto Post Articles
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # 毎日UTC 0:00 = JST 9:00
+    # - cron: # DISABLED 2026-04-11 質転換のため停止 '0 0 * * *'  # 毎日UTC 0:00 = JST 9:00
   workflow_dispatch:
 
 permissions:
