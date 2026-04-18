@@ -1,8 +1,7 @@
 name: Auto Post Articles
 
+# 2026-04-11 質転換のためscheduleトリガ停止。手動起動のみ残す。
 on:
-  schedule:
-    # - cron: # DISABLED 2026-04-11 質転換のため停止 '0 0 * * *'  # 毎日UTC 0:00 = JST 9:00
   workflow_dispatch:
 
 permissions:
