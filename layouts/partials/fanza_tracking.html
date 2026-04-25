@@ -1,0 +1,30 @@
+{{/* __FANZA_TRACKING__START__ */}}
+{{- $gaID := site.Config.Services.GoogleAnalytics.ID -}}
+{{- if $gaID -}}
+<script>
+// FANZA / DMM アフィリエイトリンク クリック計測
+// GA4 カスタムイベント名: fanza_click
+document.addEventListener('DOMContentLoaded', function() {
+  var selectors = 'a[href*="fanza.co.jp"], a[href*="dmm.co.jp"]';
+  document.querySelectorAll(selectors).forEach(function(link) {
+    link.addEventListener('click', function() {
+      if (typeof gtag !== 'function') return;
+      try {
+        var href = this.href || '';
+        var labelText = (this.textContent || '').trim().slice(0, 100);
+        gtag('event', 'fanza_click', {
+          'event_category': 'affiliate',
+          'event_label': labelText || href,
+          'link_url': href,
+          'page_location': window.location.href,
+          'page_path': window.location.pathname,
+          'page_title': document.title,
+          'affiliate_network': 'fanza'
+        });
+      } catch (err) { /* no-op */ }
+    });
+  });
+});
+</script>
+{{- end -}}
+{{/* __FANZA_TRACKING__END__ */}}
