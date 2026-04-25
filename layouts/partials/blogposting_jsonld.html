@@ -1,0 +1,70 @@
+{{/*
+  BlogPosting JSON-LD
+  -------------------
+  Emits a schema.org BlogPosting structured-data block for single pages.
+  Coexists with the Article / Review / VideoObject / BreadcrumbList /
+  WebSite JSON-LD blocks emitted from partials/extend_head.html, and with
+  the PaperMod theme's built-in schema block.
+
+  Rendered only on .Kind == "page" (regular article pages). Safe to
+  invoke from any template — non-page kinds no-op.
+*/}}
+{{- if eq .Kind "page" -}}
+{{- $desc := "" -}}
+{{- with .Description -}}
+  {{- $desc = . -}}
+{{- else -}}
+  {{- $desc = .Summary | plainify -}}
+{{- end -}}
+{{/* description が短すぎ (50 文字未満) ならリッチリザルト品質を担保するため
+     Summary 流用で 80～160 文字の本文に拡張する。Rich Results 監査
+     2026-04-25 で 12 URL 中 3 件が 48-49 文字判定。これを自動回避。 */}}
+{{- if lt (len $desc) 50 -}}
+  {{- $supplement := .Summary | plainify -}}
+  {{- if and $supplement (ne $supplement $desc) -}}
+    {{- $desc = printf "%s %s" $desc $supplement -}}
+  {{- end -}}
+{{- end -}}
+{{- if gt (len $desc) 160 -}}
+  {{- $desc = substr $desc 0 160 -}}
+{{- end -}}
+{{- $img := "" -}}
+{{- with .Params.cover -}}{{- with .image -}}{{- $img = . -}}{{- end -}}{{- end -}}
+{{- $absImg := "" -}}
+{{- if $img -}}
+  {{- if or (hasPrefix $img "http://") (hasPrefix $img "https://") -}}
+    {{- $absImg = $img -}}
+  {{- else -}}
+    {{- $absImg = printf "%s%s" (.Site.BaseURL | strings.TrimRight "/") (printf "/%s" ($img | strings.TrimLeft "/")) -}}
+  {{- end -}}
+{{- end -}}
+{{- $authorName := .Site.Params.Author | default "エロナビ編集部" -}}
+{{- $section := "" -}}
+{{- with .Params.categories -}}{{- $section = index . 0 -}}{{- end -}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ .Permalink }}"
+  },
+  "headline": {{ .Title | jsonify | safeJS }},
+  "datePublished": "{{ .Date.Format "2006-01-02T15:04:05-07:00" }}",
+  "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" }}",
+  "description": {{ $desc | jsonify | safeJS }}{{ if $absImg }},
+  "image": [{{ $absImg | jsonify | safeJS }}]{{ end }},
+  "author": {
+    "@type": "Person",
+    "name": {{ $authorName | jsonify | safeJS }}
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": {{ .Site.Title | jsonify | safeJS }},
+    "url": "{{ .Site.BaseURL }}"
+  }{{ with .Params.keywords }},
+  "keywords": {{ . | jsonify | safeJS }}{{ end }}{{ if $section }},
+  "articleSection": {{ $section | jsonify | safeJS }}{{ end }}
+}
+</script>
+{{- end -}}
