@@ -21,3 +21,7 @@
 {{/* __FANZA_TRACKING__CALL__START__ */}}
 {{ partial "fanza_tracking.html" . }}
 {{/* __FANZA_TRACKING__CALL__END__ */}}
+
+{{/* __AUTO_INTERNAL_LINKS__START__ */}}
+{{ if eq .Kind "page" }}{{ partial "auto_internal_links.html" . }}{{ end }}
+{{/* __AUTO_INTERNAL_LINKS__END__ */}}
