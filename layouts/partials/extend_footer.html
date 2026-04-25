@@ -25,3 +25,10 @@
 {{/* __AUTO_INTERNAL_LINKS__START__ */}}
 {{ if eq .Kind "page" }}{{ partial "auto_internal_links.html" . }}{{ end }}
 {{/* __AUTO_INTERNAL_LINKS__END__ */}}
+
+{{/* __JSONLD_BATCH__START__ */}}
+{{ if eq .Kind "page" }}
+{{ partial "blogposting_jsonld.html" . }}
+{{ partial "breadcrumb_jsonld.html" . }}
+{{ end }}
+{{/* __JSONLD_BATCH__END__ */}}
