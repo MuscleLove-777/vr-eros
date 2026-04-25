@@ -1,0 +1,73 @@
+{{/* Auto internal linking: client-side keyword → article URL replacement.
+     Data: /data/auto_links.json (keywords → URL). Idempotent, skips existing links. */}}
+<script id="auto-links-data" type="application/json">
+{{- $data := site.Data.auto_links -}}
+{{ $data | jsonify | safeJS }}
+</script>
+<script>
+(function(){
+  var el = document.getElementById('auto-links-data');
+  if (!el) return;
+  var data;
+  try { data = JSON.parse(el.textContent); } catch(e){ return; }
+  if (!data || typeof data !== 'object') return;
+
+  function esc(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+  var keys = Object.keys(data).sort(function(a,b){ return b.length - a.length; });
+  var currentPath = window.location.pathname;
+
+  function run(){
+    var article = document.querySelector('article.post-content, article .post-content, main article, .post-single .post-content, .post-single');
+    if (!article) return;
+    // Skip inside links and headings
+    var skipAncestors = 'a, h1, h2, h3, h4, h5, h6, code, pre';
+    var walker = document.createTreeWalker(article, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.parentNode) return NodeFilter.FILTER_REJECT;
+        if (n.parentNode.closest(skipAncestors)) return NodeFilter.FILTER_REJECT;
+        if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var textNodes = [];
+    var node;
+    while ((node = walker.nextNode())) textNodes.push(node);
+
+    textNodes.forEach(function(tn){
+      var text = tn.nodeValue;
+      var matched = null;
+      for (var i=0; i<keys.length; i++){
+        var kw = keys[i];
+        var url = data[kw];
+        if (!url || currentPath.indexOf(url) !== -1) continue;
+        var idx = text.indexOf(kw);
+        if (idx !== -1){
+          matched = { kw: kw, url: url, idx: idx };
+          break; // 1 keyword per text node to avoid over-linking
+        }
+      }
+      if (!matched) return;
+      var before = document.createTextNode(text.substring(0, matched.idx));
+      var after  = document.createTextNode(text.substring(matched.idx + matched.kw.length));
+      var a = document.createElement('a');
+      a.href = matched.url;
+      a.className = 'auto-internal-link';
+      a.style.color = '#e63946';
+      a.style.borderBottom = '1px dashed #e63946';
+      a.style.textDecoration = 'none';
+      a.textContent = matched.kw;
+      var parent = tn.parentNode;
+      parent.insertBefore(before, tn);
+      parent.insertBefore(a, tn);
+      parent.insertBefore(after, tn);
+      parent.removeChild(tn);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+})();
+</script>
