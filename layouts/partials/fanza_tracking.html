@@ -2,29 +2,45 @@
 {{- $gaID := site.Config.Services.GoogleAnalytics.ID -}}
 {{- if $gaID -}}
 <script>
-// FANZA / DMM アフィリエイトリンク クリック計測
+// FANZA / DMM アフィリエイトリンク クリック計測 (event delegation 版)
 // GA4 カスタムイベント名: fanza_click
-document.addEventListener('DOMContentLoaded', function() {
-  var selectors = 'a[href*="fanza.co.jp"], a[href*="dmm.co.jp"]';
-  document.querySelectorAll(selectors).forEach(function(link) {
-    link.addEventListener('click', function() {
-      if (typeof gtag !== 'function') return;
-      try {
-        var href = this.href || '';
-        var labelText = (this.textContent || '').trim().slice(0, 100);
-        gtag('event', 'fanza_click', {
-          'event_category': 'affiliate',
-          'event_label': labelText || href,
-          'link_url': href,
-          'page_location': window.location.href,
-          'page_path': window.location.pathname,
-          'page_title': document.title,
-          'affiliate_network': 'fanza'
-        });
-      } catch (err) { /* no-op */ }
-    });
-  });
-});
+// 既存の affiliate_click (google_analytics.html) と併走し、FANZA特化の収益指標として分離
+// v2: DOMContentLoaded 時の querySelectorAll では floating-cta 等の遅延挿入リンクを拾えないため
+//     document への capture-phase 委譲に変更。'click' + 'auxclick' (中クリック) も補足。
+(function() {
+  function fireFanzaClick(link) {
+    if (typeof gtag !== 'function') return;
+    try {
+      var href = link.href || '';
+      if (!href) return;
+      // fanza.co.jp / dmm.co.jp を href に含むリンクを対象 (al.fanza.co.jp / video.dmm.co.jp 等もマッチ)
+      if (href.indexOf('fanza.co.jp') === -1 && href.indexOf('dmm.co.jp') === -1) return;
+      var labelText = (link.textContent || '').trim().slice(0, 100);
+      gtag('event', 'fanza_click', {
+        'event_category': 'affiliate',
+        'event_label': labelText || href,
+        'link_url': href,
+        'page_location': window.location.href,
+        'page_path': window.location.pathname,
+        'page_title': document.title,
+        'affiliate_network': 'fanza',
+        'transport_type': 'beacon'
+      });
+    } catch (err) { /* no-op */ }
+  }
+  function handler(e) {
+    var t = e.target;
+    if (t && t.nodeType === 3) t = t.parentElement;
+    if (!t || !t.closest) return;
+    var link = t.closest('a');
+    if (!link) return;
+    fireFanzaClick(link);
+  }
+  // capture-phase で 'click' と 'auxclick'(中クリック) を委譲監視。
+  // target=_blank で新タブが開いてもイベント発火後に navigation するため計測ロスは無い。
+  document.addEventListener('click', handler, true);
+  document.addEventListener('auxclick', handler, true);
+})();
 </script>
 {{- end -}}
 {{/* __FANZA_TRACKING__END__ */}}
