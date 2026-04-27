@@ -27,3 +27,44 @@
 }
 </script>
 {{ end }}
+
+{{/* compliance-block-v1: 景表法ステマ規制（消費者庁 2023-10-01）対応のPR表記＋18禁年齢確認 */}}
+<style>
+  #ml-compliance-bar{position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#111;color:#eee;font-size:11px;line-height:1.4;padding:6px 12px;text-align:center;border-top:1px solid #333;font-family:system-ui,sans-serif}
+  #ml-compliance-bar a{color:#9ec5fe;text-decoration:underline}
+  #ml-age-gate{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.92);color:#fff;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif}
+  #ml-age-gate .box{max-width:480px;padding:24px;background:#181818;border:1px solid #333;border-radius:8px;text-align:center}
+  #ml-age-gate h2{margin:0 0 12px;font-size:18px}
+  #ml-age-gate p{margin:8px 0;font-size:13px;line-height:1.6;color:#ccc}
+  #ml-age-gate .btns{display:flex;gap:10px;justify-content:center;margin-top:18px}
+  #ml-age-gate button{padding:10px 18px;border:none;border-radius:4px;cursor:pointer;font-size:14px;font-weight:600}
+  #ml-age-gate .yes{background:#dc3545;color:#fff}
+  #ml-age-gate .no{background:#444;color:#fff}
+</style>
+<div id="ml-compliance-bar">
+  本サイトには広告（FANZA／DMM等のアフィリエイトリンク）が含まれます。掲載商品はすべて18禁です。本サイトの利用は18歳以上の方に限ります。
+</div>
+<div id="ml-age-gate" style="display:none">
+  <div class="box">
+    <h2>18歳未満閲覧禁止</h2>
+    <p>このサイトには成人向けコンテンツへの広告リンクが含まれます。あなたは18歳以上ですか？</p>
+    <p style="font-size:11px;color:#888">本サイトには景品表示法に基づくアフィリエイト広告が含まれます。</p>
+    <div class="btns">
+      <button class="yes" onclick="(function(){try{localStorage.setItem('ml_age_ok','1')}catch(e){}document.getElementById('ml-age-gate').style.display='none'})()">はい（18歳以上）</button>
+      <button class="no" onclick="location.href='https://www.google.com/'">いいえ</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('ml_age_ok')!=='1'){
+      var g=document.getElementById('ml-age-gate'); if(g) g.style.display='flex';
+    }
+  }catch(e){}
+})();
+</script>
+
+{{/* __ITEMLIST_JSONLD__START__ */}}
+{{ partial "itemlist_jsonld.html" . }}
+{{/* __ITEMLIST_JSONLD__END__ */}}

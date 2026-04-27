@@ -1,0 +1,105 @@
+{{/*
+  ItemList JSON-LD
+  ----------------
+  Emits a schema.org ItemList structured-data block for list-type pages
+  (ranking-daily-*, actress-hub-*, series-hub-*, orphan-hub-*, posts whose
+  title contains "TOP" or "ランキング", or those categorized as "Ranking" /
+  "ハブ" / "女優特集" / "シリーズ特集").
+
+  Strategy:
+    1. Detect list-type via filename prefix, title keywords, or categories.
+    2. First pass: harvest H3 headings from .Content (works for ranking
+       articles whose items are rendered as H3 sections). Each H3 becomes a
+       ListItem whose URL is the page permalink + `#<h3-id>`.
+    3. Fallback: harvest internal anchor links (<a href="...">) under the
+       site's own posts/. Anchor text becomes ListItem.name.
+    4. Cap at 30 items so JSON-LD stays small. Skip emission when zero.
+
+  Idempotent: only adds output. Existing JSON-LD blocks are untouched.
+*/}}
+{{- if eq .Kind "page" -}}
+{{- $title := .Title -}}
+{{- $cats := .Params.categories | default (slice) -}}
+{{- $fname := "" -}}
+{{- with .File -}}{{ $fname = .LogicalName }}{{- end -}}
+{{- $isList := false -}}
+{{- if or (in $title "TOP") (in $title "ランキング") -}}{{ $isList = true }}{{- end -}}
+{{- range $cats -}}
+  {{- if or (eq . "Ranking") (eq . "ハブ") (eq . "女優特集") (eq . "シリーズ特集") -}}{{ $isList = true }}{{- end -}}
+{{- end -}}
+{{- if or (hasPrefix $fname "actress-hub-") (hasPrefix $fname "series-hub-") (hasPrefix $fname "orphan-hub-") -}}{{ $isList = true }}{{- end -}}
+{{- if in $fname "ranking-daily-" -}}{{ $isList = true }}{{- end -}}
+
+{{- if $isList -}}
+{{- $items := slice -}}
+{{- $seen := dict -}}
+{{- $perm := .Permalink -}}
+
+{{/* --- Pass 1: H3 sections (typical for ranking-daily-*) --- */}}
+{{- $h3s := findRE `<h3[^>]+id="([^"]+)"[^>]*>([\s\S]*?)</h3>` .Content 60 -}}
+{{- range $h3s -}}
+  {{- $hid := replaceRE `^<h3[^>]+id="([^"]+)".*$` "$1" . -}}
+  {{- $inner := replaceRE `^<h3[^>]+>([\s\S]*?)</h3>.*$` "$1" . -}}
+  {{- $name := $inner | plainify | replaceRE `^#\s*` "" | replaceRE `\s+` " " | chomp -}}
+  {{- $name = $name | replaceRE `^[\x{1F947}\x{1F948}\x{1F949}🥇🥈🥉]\s*` "" -}}
+  {{- $url := printf "%s#%s" $perm $hid -}}
+  {{- if and $name (gt (len $name) 1) -}}
+    {{- if not (index $seen $url) -}}
+      {{- $seen = merge $seen (dict $url true) -}}
+      {{- $items = $items | append (dict "url" $url "name" $name) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* --- Pass 2: fallback to internal post links (typical for *-hub-*) --- */}}
+{{- if lt (len $items) 3 -}}
+  {{- $items = slice -}}
+  {{- $seen = dict -}}
+  {{- $matches := findRE `<a[^>]+href="([^"]+)"[^>]*>([^<]{2,200})</a>` .Content 80 -}}
+  {{- range $matches -}}
+    {{- $href := replaceRE `^<a[^>]+href="([^"]+)".*$` "$1" . -}}
+    {{- $text := replaceRE `^<a[^>]+>([^<]+)</a>.*$` "$1" . -}}
+    {{- $text = $text | plainify | chomp -}}
+    {{- $isInternal := or (in $href "/posts/") (hasPrefix $href "/posts/") -}}
+    {{- $isCatTag := or (in $href "/categories/") (in $href "/tags/") -}}
+    {{- $isAnchor := hasPrefix $href "#" -}}
+    {{- if and $isInternal (not $isCatTag) (not $isAnchor) $text -}}
+      {{- if not (index $seen $href) -}}
+        {{- $seen = merge $seen (dict $href true) -}}
+        {{- $items = $items | append (dict "url" $href "name" $text) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $items = first 30 $items -}}
+{{- if gt (len $items) 0 -}}
+{{- $base := trim site.BaseURL "/" -}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": {{ .Title | jsonify | safeJS }},
+  "url": {{ .Permalink | jsonify | safeJS }},
+  "numberOfItems": {{ len $items }},
+  "itemListElement": [
+    {{- range $i, $it := $items }}{{ if $i }},{{ end }}
+    {{- $u := index $it "url" -}}
+    {{- if hasPrefix $u "http" -}}
+    {{- /* absolute already */ -}}
+    {{- else if hasPrefix $u "/" -}}
+    {{- $u = printf "%s%s" $base $u -}}
+    {{- end }}
+    {
+      "@type": "ListItem",
+      "position": {{ add $i 1 }},
+      "url": {{ $u | jsonify | safeJS }},
+      "name": {{ (index $it "name") | jsonify | safeJS }}
+    }
+    {{- end }}
+  ]
+}
+</script>
+{{- end -}}
+{{- end -}}
+{{- end -}}
