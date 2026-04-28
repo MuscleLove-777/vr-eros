@@ -27,7 +27,11 @@
 {{- range $cats -}}
   {{- if or (eq . "Ranking") (eq . "ハブ") (eq . "女優特集") (eq . "シリーズ特集") -}}{{ $isList = true }}{{- end -}}
 {{- end -}}
-{{- if or (hasPrefix $fname "actress-hub-") (hasPrefix $fname "series-hub-") (hasPrefix $fname "orphan-hub-") -}}{{ $isList = true }}{{- end -}}
+{{- $tags := .Params.tags | default (slice) -}}
+{{- range $tags -}}
+  {{- if or (eq . "ハブ") (eq . "特集") (eq . "ランキング") -}}{{ $isList = true }}{{- end -}}
+{{- end -}}
+{{- if or (hasPrefix $fname "actress-hub-") (hasPrefix $fname "series-hub-") (hasPrefix $fname "orphan-hub-") (hasPrefix $fname "theme-hub-") -}}{{ $isList = true }}{{- end -}}
 {{- if in $fname "ranking-daily-" -}}{{ $isList = true }}{{- end -}}
 
 {{- if $isList -}}
