@@ -82,21 +82,25 @@ googleAnalyticsID = "G-YV53HTHVY2"
     noClasses = false
 
 [[menus.main]]
+  identifier = "search"
   name = "検索"
   url = "/search/"
   weight = 10
 
 [[menus.main]]
+  identifier = "categories"
   name = "カテゴリ"
   url = "/categories/"
   weight = 20
 
 [[menus.main]]
+  identifier = "tags"
   name = "タグ"
   url = "/tags/"
   weight = 30
 
 [[menus.main]]
+  identifier = "archive"
   name = "アーカイブ"
   url = "/archives/"
   weight = 40
