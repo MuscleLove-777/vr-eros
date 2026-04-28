@@ -3,7 +3,8 @@ languageCode = "ja"
 defaultContentLanguage = "ja"
 title = "没入エロスVR | アダルトVR作品おすすめガイド"
 theme = "PaperMod"
-paginate = 10
+[pagination]
+  pagerSize = 30
 
 enableRobotsTXT = true
 buildDrafts = false
