@@ -77,3 +77,14 @@ cover:
 </aside>
 <!-- ML_CROSS_LINK_END -->
 
+<!-- HUB_INTERLINK_START -->
+<aside class="hub-interlink" style="margin-top:50px;padding:24px;background:#f0f0f0;border-left:4px solid #6c63ff;border-radius:6px;">
+  <h3 style="margin-top:0;">🌐 関連特集</h3>
+  <p style="margin:8px 0 12px;color:#444;font-size:14px;">同サイト内の他テーマも横断チェック</p>
+  <ul style="margin:0;padding-left:20px;line-height:1.9;">
+    <li><a href="/posts/theme-hub-8kvr/">8KVR 特集ガイド【VRデバイス・ジャンル別まとめ】</a></li>
+    <li><a href="/posts/theme-hub-ハイクオリティvr/">ハイクオリティVR 特集ガイド【VRデバイス・ジャンル別まとめ】</a></li>
+    <li><a href="/posts/theme-hub-単体作品/">単体作品 特集ガイド【VRデバイス・ジャンル別まとめ】</a></li>
+  </ul>
+</aside>
+<!-- HUB_INTERLINK_END -->
