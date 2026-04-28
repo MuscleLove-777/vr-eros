@@ -1,7 +1,10 @@
 {{- /* __RSS_WEBSUB_HUB__START__ MuscleLove WebSub-enabled RSS for Hugo PaperMod
        Adds <atom:link rel="hub" href="https://pubsubhubbub.appspot.com/" />
        to enable Google's public WebSub hub for push delivery.
-       Idempotent marker so future redeploys can detect existing override. */ -}}
+       __RSS_MEDIA_THUMBNAIL__ Wave25-D (2026-04-28): adds Media RSS namespace
+       and <media:thumbnail>/<enclosure> elements derived from cover.image so
+       Feedly etc. can render article thumbnails.
+       Idempotent markers so future redeploys can detect existing override. */ -}}
 {{- $authorEmail := "" }}
 {{- with site.Params.author }}
   {{- if reflect.IsMap . }}
@@ -35,7 +38,7 @@
 {{- $pages = $pages | first $limit }}
 {{- end }}
 {{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>{{ if eq .Title site.Title }}{{ site.Title }}{{ else }}{{ with .Title }}{{ . }} on {{ end }}{{ site.Title }}{{ end }}</title>
     <link>{{ .Permalink }}</link>
@@ -66,6 +69,15 @@
       {{- with $authorEmail }}<author>{{ . }}{{ with $authorName }} ({{ . }}){{ end }}</author>{{ end }}
       <guid>{{ .Permalink }}</guid>
       <description>{{ with .Params.cover }}{{ if .image }}&lt;p&gt;&lt;img src=&quot;{{ .image }}&quot; /&gt;&lt;/p&gt;{{ end }}{{ end }}{{ with .Description | html }}{{ . }}{{ else }}{{ .Summary | html }}{{ end }}</description>
+      {{- with .Params.cover }}{{ with .image }}
+      {{- $thumb := . -}}
+      {{- if not (or (hasPrefix $thumb "http://") (hasPrefix $thumb "https://")) -}}
+        {{- $thumb = $thumb | absURL -}}
+      {{- end }}
+      <media:thumbnail url="{{ $thumb }}" />
+      <media:content url="{{ $thumb }}" medium="image" />
+      <enclosure url="{{ $thumb }}" type="image/jpeg" length="0" />
+      {{- end }}{{ end }}
       {{- range .Params.categories }}
       <category>{{ . }}</category>
       {{- end }}
@@ -80,4 +92,4 @@
     {{- end }}
   </channel>
 </rss>
-{{- /* __RSS_WEBSUB_HUB__END__ */ -}}
+{{- /* __RSS_MEDIA_THUMBNAIL__ __RSS_WEBSUB_HUB__END__ */ -}}
