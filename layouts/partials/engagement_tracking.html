@@ -1,0 +1,108 @@
+{{/* __ENGAGEMENT_TRACKING__START__ */}}
+{{- $gaID := site.Config.Services.GoogleAnalytics.ID -}}
+{{- if $gaID -}}
+<script>
+// GA4 engagement metrics 拡充
+//   - scroll_depth (25/50/75/100%)
+//   - outbound_click (FANZA/DMM 以外の外部リンク。FANZAは fanza_tracking.html 側で計測)
+//   - time_on_page (idle 30s 控除、5秒未満は送らない)
+// fanza_click / affiliate_click とは event 名が分離しているので干渉しない。
+(function() {
+  if (typeof window === 'undefined') return;
+
+  // ----- Scroll depth -----
+  var scrollMarks = [25, 50, 75, 100];
+  var firedMarks = {};
+  function trackScroll() {
+    var docEl = document.documentElement;
+    var docHeight = docEl.scrollHeight - window.innerHeight;
+    if (docHeight <= 0) return;
+    var scrollY = window.scrollY || window.pageYOffset || 0;
+    var scrollPct = Math.round((scrollY / docHeight) * 100);
+    for (var i = 0; i < scrollMarks.length; i++) {
+      var mark = scrollMarks[i];
+      if (scrollPct >= mark && !firedMarks[mark]) {
+        firedMarks[mark] = true;
+        if (typeof gtag === 'function') {
+          try {
+            gtag('event', 'scroll_depth', {
+              'event_category': 'engagement',
+              'event_label': mark + '%',
+              'value': mark,
+              'page_path': window.location.pathname,
+              'transport_type': 'beacon'
+            });
+          } catch (err) { /* no-op */ }
+        }
+      }
+    }
+  }
+  window.addEventListener('scroll', trackScroll, { passive: true });
+
+  // ----- Outbound click (excluding fanza/dmm which is already tracked) -----
+  document.addEventListener('click', function(e) {
+    var t = e.target;
+    if (t && t.nodeType === 3) t = t.parentElement;
+    if (!t || !t.closest) return;
+    var link = t.closest('a[href]');
+    if (!link) return;
+    var href = link.href || '';
+    if (!href) return;
+    // 内部リンク除外
+    if (href.indexOf(window.location.hostname) !== -1) return;
+    // FANZA/DMM は fanza_tracking.html で別計測中なので除外
+    if (href.indexOf('fanza.co.jp') !== -1 || href.indexOf('dmm.co.jp') !== -1) return;
+    // mailto/tel/javascript も除外
+    if (href.indexOf('http') !== 0) return;
+    if (typeof gtag === 'function') {
+      try {
+        gtag('event', 'outbound_click', {
+          'event_category': 'engagement',
+          'event_label': href,
+          'link_url': href,
+          'page_path': window.location.pathname,
+          'transport_type': 'beacon'
+        });
+      } catch (err) { /* no-op */ }
+    }
+  }, true);
+
+  // ----- Time on page (idle 30s 控除で実測) -----
+  var startTime = Date.now();
+  var maxIdle = 30000; // 30秒以上のidleは離脱とみなす
+  var lastActivity = startTime;
+  ['click', 'keydown', 'scroll', 'touchstart', 'mousemove'].forEach(function(evt) {
+    window.addEventListener(evt, function() {
+      lastActivity = Date.now();
+    }, { passive: true });
+  });
+  function sendTimeOnPage() {
+    var now = Date.now();
+    var rawTotal = now - startTime;
+    // 直近 lastActivity から maxIdle 経過したらそこで打ち切り
+    var capped = Math.min(rawTotal, (lastActivity - startTime) + maxIdle);
+    var seconds = Math.round(capped / 1000);
+    if (seconds < 5) return;
+    if (typeof gtag === 'function') {
+      try {
+        gtag('event', 'time_on_page', {
+          'event_category': 'engagement',
+          'event_label': window.location.pathname,
+          'value': seconds,
+          'page_path': window.location.pathname,
+          'transport_type': 'beacon'
+        });
+      } catch (err) { /* no-op */ }
+    }
+  }
+  // pagehide は modern browser で beforeunload より確実 (mobile Safari 等)
+  window.addEventListener('pagehide', sendTimeOnPage);
+  window.addEventListener('beforeunload', sendTimeOnPage);
+  // visibilitychange (タブ切替時) でも送る
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'hidden') sendTimeOnPage();
+  });
+})();
+</script>
+{{- end -}}
+{{/* __ENGAGEMENT_TRACKING__END__ */}}
