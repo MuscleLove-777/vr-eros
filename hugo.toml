@@ -39,7 +39,22 @@ googleAnalyticsID = "G-YV53HTHVY2"
 
   [params.homeInfoParams]
     Title = "没入エロスVR"
-    Content = "VR対応アダルト作品を毎日厳選してお届け。没入感MAXのVRエロス体験をサンプル動画でチェック！"
+    Content = """
+VR対応アダルト作品を毎日厳選してお届け。没入感MAXのVRエロス体験をサンプル動画でチェック！
+
+<div class="home-cat-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px;">
+  <strong style="width:100%;font-size:0.95rem;margin-bottom:4px;">🔥 人気カテゴリから探す</strong>
+  <a href="/vr-eros/categories/vr/" style="padding:6px 14px;background:#e63946;color:#fff;text-decoration:none;border-radius:18px;font-size:0.85rem;font-weight:600;">🥽 VR</a>
+  <a href="/vr-eros/categories/vr%E7%89%B9%E9%9B%86/" style="padding:6px 14px;background:#1f2937;color:#fff;text-decoration:none;border-radius:18px;font-size:0.85rem;">VR特集</a>
+  <a href="/vr-eros/categories/%E3%83%A9%E3%83%B3%E3%82%AD%E3%83%B3%E3%82%B0/" style="padding:6px 14px;background:#f59e0b;color:#000;text-decoration:none;border-radius:18px;font-size:0.85rem;font-weight:600;">🏆 ランキング</a>
+  <a href="/vr-eros/categories/%E3%82%AC%E3%82%A4%E3%83%89/" style="padding:6px 14px;background:#1f2937;color:#fff;text-decoration:none;border-radius:18px;font-size:0.85rem;">ガイド</a>
+  <a href="/vr-eros/categories/%E5%A5%B3%E5%84%AA%E7%89%B9%E9%9B%86/" style="padding:6px 14px;background:#1f2937;color:#fff;text-decoration:none;border-radius:18px;font-size:0.85rem;">女優特集</a>
+  <a href="/vr-eros/categories/%E6%B3%A8%E7%9B%AE%E4%BD%9C%E5%93%81/" style="padding:6px 14px;background:#1f2937;color:#fff;text-decoration:none;border-radius:18px;font-size:0.85rem;">注目作品</a>
+  <a href="/vr-eros/categories/%E3%83%AC%E3%83%93%E3%83%A5%E3%83%BC/" style="padding:6px 14px;background:#1f2937;color:#fff;text-decoration:none;border-radius:18px;font-size:0.85rem;">レビュー</a>
+  <a href="/vr-eros/categories/%E3%81%8A%E3%81%99%E3%81%99%E3%82%81/" style="padding:6px 14px;background:#1f2937;color:#fff;text-decoration:none;border-radius:18px;font-size:0.85rem;">おすすめ</a>
+  <a href="/vr-eros/categories/%E3%83%94%E3%83%83%E3%82%AF%E3%82%A2%E3%83%83%E3%83%97/" style="padding:6px 14px;background:#1f2937;color:#fff;text-decoration:none;border-radius:18px;font-size:0.85rem;">ピックアップ</a>
+</div>
+"""
 
   [[params.socialIcons]]
     name = "x-twitter"
