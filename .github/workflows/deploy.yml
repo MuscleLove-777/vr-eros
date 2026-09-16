@@ -51,6 +51,14 @@ jobs:
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
 
+      - name: Set up image checker
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Ensure article images and card thumbnails
+        run: |
+          python -m pip install beautifulsoup4==4.15.0
+          python scripts/enhance_project.py --root './public' --project 'vr-eros'
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
