@@ -20,6 +20,8 @@ buildExpired = false
   priority = 0.7
 
 [params]
+aiFaq = true
+aiFaqPlatform = "FANZA（DMM）"
 googleAnalyticsID = "G-YV53HTHVY2"
   canonicalURL = true
   env = "production"
