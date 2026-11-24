@@ -4,12 +4,16 @@
   可視 FAQ セクションと FAQPage JSON-LD を「同一データ」から描画する。
   (AI 検索エンジンは markup と可視テキストの一致を要求するため、
    データ定義を一箇所に集約して構造的に不一致を防ぐ)
+  JSON-LD 値は jsonify|safeJS 必須: Go html/template は ld+json 内の
+  アクション出力を JS として再エンコードするため、safeJS 無しだと
+  値に引用符が二重に入る(2026-11-24 実測・クロスレビュー指摘)。
 
   有効化: hugo.toml [params] aiFaq = true
   表記:   hugo.toml [params] aiFaqPlatform = "FANZA（DMM）" など
-  記事ページ (.Kind == "page") のみ描画。
+  記事セクション(既定 posts、aiFaqSection で変更可)のみ描画。
+  about/ポリシー等の非作品ページには出さない。
 */}}
-{{- if and .Site.Params.aiFaq (eq .Kind "page") -}}
+{{- if and .Site.Params.aiFaq (eq .Kind "page") (eq .Section (.Site.Params.aiFaqSection | default "posts")) -}}
 {{- $platform := .Site.Params.aiFaqPlatform | default "公式配信・販売ページ" -}}
 {{- $title := .Title -}}
 {{- $faqs := slice
@@ -38,8 +42,8 @@
     {{- range $i, $f := $faqs }}{{ if $i }},{{ end }}
     {
       "@type": "Question",
-      "name": {{ $f.q | jsonify }},
-      "acceptedAnswer": { "@type": "Answer", "text": {{ $f.a | jsonify }} }
+      "name": {{ $f.q | jsonify | safeJS }},
+      "acceptedAnswer": { "@type": "Answer", "text": {{ $f.a | jsonify | safeJS }} }
     }
     {{- end }}
   ]
