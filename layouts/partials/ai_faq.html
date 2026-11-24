@@ -1,0 +1,48 @@
+{{/*
+  ai_faq.html — 2AI architecture FAQ block
+  ----------------------------------------
+  可視 FAQ セクションと FAQPage JSON-LD を「同一データ」から描画する。
+  (AI 検索エンジンは markup と可視テキストの一致を要求するため、
+   データ定義を一箇所に集約して構造的に不一致を防ぐ)
+
+  有効化: hugo.toml [params] aiFaq = true
+  表記:   hugo.toml [params] aiFaqPlatform = "FANZA（DMM）" など
+  記事ページ (.Kind == "page") のみ描画。
+*/}}
+{{- if and .Site.Params.aiFaq (eq .Kind "page") -}}
+{{- $platform := .Site.Params.aiFaqPlatform | default "公式配信・販売ページ" -}}
+{{- $title := .Title -}}
+{{- $faqs := slice
+  (dict
+    "q" (printf "「%s」はどこで見られますか？" $title)
+    "a" (printf "%sで正規配信されています。本ページ内のリンクから公式の配信ページへ移動できます。" $platform))
+  (dict
+    "q" "無料サンプルはありますか？"
+    "a" (printf "あります。本ページにサンプルを掲載しており、追加のサンプルは%sの公式ページで確認できます。" $platform))
+  (dict
+    "q" "購入・視聴は安全ですか？"
+    "a" (printf "安全です。掲載作品はすべて%sの正規ライセンス配信で、決済は公式サイト上で行われます。当サイトは作品の紹介のみを行い、決済情報には関与しません。" $platform))
+-}}
+<section class="ai-faq" style="margin:40px auto 0;max-width:900px;padding:0 20px;">
+  <h2>よくある質問</h2>
+  {{- range $faqs }}
+  <h3>Q. {{ .q }}</h3>
+  <p>{{ .a }}</p>
+  {{- end }}
+</section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{- range $i, $f := $faqs }}{{ if $i }},{{ end }}
+    {
+      "@type": "Question",
+      "name": {{ $f.q | jsonify }},
+      "acceptedAnswer": { "@type": "Answer", "text": {{ $f.a | jsonify }} }
+    }
+    {{- end }}
+  ]
+}
+</script>
+{{- end -}}
